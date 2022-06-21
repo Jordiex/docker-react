@@ -1,0 +1,23 @@
+language: generic
+sudo: required
+services:
+ - docker
+
+before_install:
+ - docker build -t jordiex/docker-react -f dockerfile.dev .
+
+script:
+ - docker run -e CI=true jordiex/docker-react npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "eu-west-1"
+  app: "docker"
+  env: "Docker-env"
+  bucket_name: "elasticbeanstalk-eu-west-1-637174301702"
+  bucket_path: "docker"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: "$AWS_SECRET_KEY"
+  
